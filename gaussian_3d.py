@@ -36,7 +36,7 @@ def render(mu, Sigma, color, opacity, order, H, W, tile=32):
         row = []
         for tx in range(0, W, tile):
             th, tw = min(tile, H - ty), min(tile, W - tx)
-            m = (x1 > tx) & (x0 < tx + tw) & (y1 > ty) & (y0 < ty + th)   # 碰到这块的高斯
+            m = (x1 > tx) & (x0 < tx + tw) & (y1 > ty) & (y0 < ty + th)
             xy = pixel_grid(th, tw, device=mu.device) + torch.tensor([tx, ty], device=mu.device)
             row.append(composite(xy, mu[m], Sigma[m], color[m], opacity[m]).reshape(th, tw, 3))
         rows.append(torch.cat(row, dim=1))
@@ -120,7 +120,7 @@ def init_params(N, device, scale=0.08):
     return [mu3, log_s, quat, color, op_raw]
 
 def make_opt(P, lr=1e-2):
-    return torch.optim.Adam([{"params": [p], "lr": lr} for p in P])   # 每个参数一组，P8 要用
+    return torch.optim.Adam([{"params": [p], "lr": lr} for p in P])   # one group for each param
 
 @torch.no_grad()
 def densify_3d(P, opt, g, budget, size_threshold=0.06, split_scale=1.6,

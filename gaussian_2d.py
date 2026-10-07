@@ -40,7 +40,7 @@ def pixel_grid(H, W, device=None):
 
 # maybe this  runs faster  ....
 def gaussian_weight(xy, mu, Sigma):
-    a, b, c = Sigma[:, 0, 0], Sigma[:, 0, 1], Sigma[:, 1, 1]     # 各 (N,)
+    a, b, c = Sigma[:, 0, 0], Sigma[:, 0, 1], Sigma[:, 1, 1]     # (N,) each
     det = a * c - b * b
     dx = xy[:, 0:1] - mu[None, :, 0]                             # (P, N)
     dy = xy[:, 1:2] - mu[None, :, 1]                             # (P, N)
@@ -116,9 +116,9 @@ def densify(mu, log_s, theta, color, op_raw, opt, g, budget, W,
     s, th = log_s[split].exp(), theta[split]
     c, sn = th.cos(), th.sin()
     def child_mu():
-        e = torch.randn_like(s) * s                              # (n, 2) 椭圆自身坐标系下的偏移
+        e = torch.randn_like(s) * s                              # (n, 2) offset in terms of ellipsoid's own coordinates
         off = torch.stack([c * e[:, 0] - sn * e[:, 1],
-                           sn * e[:, 0] + c * e[:, 1]], dim=-1)  # 乘 R 转到图像坐标
+                           sn * e[:, 0] + c * e[:, 1]], dim=-1)  # transform to image coordinates
         return mu[split] + off
     mu_extra = torch.cat([mu[clone], child_mu(), child_mu()])
     
