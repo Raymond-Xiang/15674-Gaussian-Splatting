@@ -175,8 +175,7 @@ def fit(path, N, device, H=256, W=256, steps=2000, seed=0):
 
 
 
-# Training script goes here
-
+# P5 training script goes here
 if __name__ == "__main__":
     device = get_device()
     os.makedirs("results", exist_ok=True)

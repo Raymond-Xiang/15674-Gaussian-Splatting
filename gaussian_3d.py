@@ -178,6 +178,7 @@ def rot_about(axis, ang):
 
 
 if __name__ == "__main__":
+    #P8 training loop, with checkpoint and training/validation images saved
     # device = get_device()
     # os.makedirs("results", exist_ok=True)
     # K, H, W, train, val = load_scene("data/spheres", device)
@@ -193,10 +194,11 @@ if __name__ == "__main__":
     #     print(f"{tag}: N = {P[0].shape[0]}  train PSNR {tr:.2f}  val PSNR {va:.2f}")
     #     torch.save([p.detach().cpu() for p in P], f"results/{tag}_params.pt")
 
+    # P9, assuming P8 is done training and checkpoint saved
     device = get_device()
     K, H, W, train, val = load_scene("data/spheres", device)
     P = [p.to(device) for p in torch.load("results/p8_params.pt")]
-    up = torch.stack([-c["R"][1] for c in train]).mean(0)      # 由训练相机估计世界的“上”方向
+    up = torch.stack([-c["R"][1] for c in train]).mean(0)
     frames = []
     for i in range(12):
         cam = {"R": val[0]["R"] @ rot_about(up, 2 * math.pi * i / 12), "t": val[0]["t"]}
